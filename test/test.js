@@ -1,7 +1,9 @@
 var expect = require('expect.js');
 
-var base = require('../dist/index.js');
+var base64 = require('../dist/index.js');
 
+
+console.log(base64.encode('12312312'))
 describe('单元测试', function() {
     this.timeout(1000);
 
@@ -11,9 +13,4 @@ describe('单元测试', function() {
         });
     });
 
-    describe('功能2', function() {
-        it('不相等', function() {
-            expect(base.name).not.to.equal(1);
-        });
-    });
 });
