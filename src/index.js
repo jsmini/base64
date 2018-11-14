@@ -61,7 +61,10 @@ function arr3to4(arr) {
 
 function getEncodingMap(str) {
     var encodeMap = str2obj(str)
-    var decodeMap = [].slice.call(encodeMap).reverse()
+    var decodeMap = {}
+    for (var key in encodeMap) {
+        decodeMap[encodeMap[key]] = key
+    }
     return {
         encodeMap: encodeMap,
         decodeMap: decodeMap
@@ -79,7 +82,35 @@ function str2obj(str) {
 function isURLBase64(text) {
     return /[-_]/.test(text)
 }
-
+function toArray(arr) {
+    var ret = []
+    arr.forEach(function(item) {
+        ret.push(item)
+    })
+    return ret
+}
+function _slice(arr, start, end) {
+    // support array and string
+    var ret = [] // default return array
+    var len = arr.length
+    if (len >= 0) {
+        start = start || 0
+        end = end || len
+        // raw array and string use self slice
+        if (typeof arr.slice !== 'function') {
+            arr = toArray(arr)
+        }
+        ret = arr.slice(start, end)
+    }
+    return ret
+}
+function _map(arr, fn) {
+    var ret = []
+    arr.forEach(function(item, i, arr) {
+        ret[i] = fn(item, i, arr)
+    })
+    return ret
+}
 function _decode(str) {
     // copy from http://stackoverflow.com/questions/12518830/java-string-getbytesutf8-javascript-analog
     str = String(str)
@@ -152,12 +183,13 @@ export function decode(text, opt) {
         .replace(/\s+$/, '')
         .replace(/=+$/, '')
         .replace(/[\n\r]/g, '') // skip empty line
-    var buf = text.split('').map(function(char) {
+    var buf = _map(text.split(''), function(char) {
         return ~~encoding.decodeMap[char]
     })
+    // console.log(buf, encoding)
     var arr = []
     for (var i = 0; i < buf.length; i += 4) {
-        var bytes = arr3to4(buf.slice(i, i + 4))
+        var bytes = arr3to4(_slice(buf, i, i + 4))
         arr.push.apply(arr, bytes)
     }
     return _encode(arr)

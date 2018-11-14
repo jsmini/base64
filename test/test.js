@@ -18,13 +18,13 @@ describe('单元测试', function() {
     })
     describe('decode测试', function() {
         it('数字', function() {
-            expect(base64.encode('MTIz')).to.equal('123')
+            expect(base64.decode('MTIz')).to.equal('123')
         })
         it('字符串', function() {
-            expect(base64.encode('aGVsbG8gd29ybGQ=')).to.equal('hello world')
+            expect(base64.decode('aGVsbG8gd29ybGQ=')).to.equal('hello world')
         })
         it('空', function() {
-            expect(base64.encode('')).to.equal('')
+            expect(base64.decode('')).to.equal('')
         })
     })
 })
