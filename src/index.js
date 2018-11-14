@@ -1,6 +1,4 @@
-
-
-var is = _.is
+import { isString } from '@jsmini/is'
 
 var padChar = '='
 var StdEncoding = getEncodingMap('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/')
@@ -14,9 +12,9 @@ function encodeBinary(binary, opt) {
     }
     var arr = []
     for (var i = 0; i < binary.length; i += 3) {
-        arr.push.apply(arr, arr4to3(_.slice(binary, i, i + 3)))
+        arr.push.apply(arr, arr4to3(binary.slice(i, i + 3)))
     }
-    arr = _.map(arr, function(i) {
+    arr = arr.map(function(i) {
         return encoding.encodeMap[i] || padChar
     })
     return arr.join('')
@@ -63,7 +61,7 @@ function arr3to4(arr) {
 
 function getEncodingMap(str) {
     var encodeMap = str2obj(str)
-    var decodeMap = _.invert(encodeMap)
+    var decodeMap = [].slice.call(encodeMap).reverse()
     return {
         encodeMap: encodeMap,
         decodeMap: decodeMap
@@ -82,6 +80,66 @@ function isURLBase64(text) {
     return /[-_]/.test(text)
 }
 
+function _decode(str) {
+    // copy from http://stackoverflow.com/questions/12518830/java-string-getbytesutf8-javascript-analog
+    str = String(str)
+    var charCode
+    var byteCodes = []
+
+    for (var i = 0; i < str.length; i++) {
+        charCode = str.charCodeAt(i)
+        if (charCode < 0x80) {
+            byteCodes.push(charCode)
+        } else if (charCode < 0x800) {
+            byteCodes.push(0xc0 | (charCode >> 6), 0x80 | (charCode & 0x3f))
+        } else if (charCode < 0xd800 || charCode >= 0xe000) {
+            byteCodes.push(
+                0xe0 | (charCode >> 12),
+                0x80 | ((charCode >> 6) & 0x3f),
+                0x80 | (charCode & 0x3f)
+            )
+        } else {
+            // let's keep things simple and only handle chars up to U+FFFF...
+            byteCodes.push(0xef, 0xbf, 0xbd) // U+FFFE 'replacement character'
+        }
+    }
+
+    return byteCodes
+}
+
+function _encode(byteCodes) {
+    // http://www.oschina.net/code/snippet_121125_19984 but it is wrong
+    var arr = []
+    var byteCode = 0
+    var charCode = 0
+
+    for (var i = 0; i < byteCodes.length; i++) {
+        byteCode = byteCodes[i]
+        if (byteCode > 0xe0) {
+            // 224
+            charCode = (byteCode & 0x0f) << 12
+            byteCode = byteCodes[++i]
+            charCode |= (byteCode & 0x3f) << 6
+            byteCode = byteCodes[++i]
+            charCode |= byteCode & 0x3f
+        } else if (byteCode > 0xc0) {
+            // 192
+            charCode = (byteCode & 0x1f) << 6
+            byteCode = byteCodes[++i]
+            charCode |= (byteCode & 0x3f) << 6
+        } else if (byteCode > 0x80) {
+            // 128
+            throw new Error('InvalidCharacterError')
+        } else {
+            // 0-128
+            charCode = byteCode
+        }
+        arr.push(String.fromCharCode(charCode))
+    }
+
+    return arr.join('')
+}
+
 export function decode(text, opt) {
     opt = opt || {}
     var encoding = StdEncoding
@@ -94,20 +152,20 @@ export function decode(text, opt) {
         .replace(/\s+$/, '')
         .replace(/=+$/, '')
         .replace(/[\n\r]/g, '') // skip empty line
-    var buf = _.map(text.split(''), function (char) {
+    var buf = text.split('').map(function(char) {
         return ~~encoding.decodeMap[char]
     })
     var arr = []
     for (var i = 0; i < buf.length; i += 4) {
-        var bytes = arr3to4(_.slice(buf, i, i + 4))
+        var bytes = arr3to4(buf.slice(i, i + 4))
         arr.push.apply(arr, bytes)
     }
-    return byteCode.encode(arr)
+    return _encode(arr)
 }
 
 export function encode(binary, opt) {
-    if (is.string(binary)) {
-        binary = byteCode.decode(binary)
+    if (isString(binary)) {
+        binary = _decode(binary)
     }
     return encodeBinary(binary, opt)
 }
