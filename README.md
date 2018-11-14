@@ -11,18 +11,7 @@
 
 ## 特性
 
-- ES6编写源码，编译生成生产代码
-- 集成 babel-runtime (默认关闭)
-- 第三方依赖自动注入（自动剔除第三方依赖无用代码tree shaking）
-- 多环境支持（支持浏览器原生，支持AMD，CMD，支持Webpack，Rollup，fis等，支持Node）
-- 集成单元测试环境
-- 集成代码风格校验eslint
-- 集成可持续构建工具[travis-ci](https://www.travis-ci.org/)
-- 支持自定义banner
-- 集成[jsmini](https://github.com/jsmini)
-- 集成ISSUE_TEMPLATE
-- 支持[sideEffects](https://juejin.im/post/5b4ff9ece51d45190c18bb65)
-- 支持一键重命名
+- base64编码解码函数
 
 **注意:** 如果不同时使用 export 与 export default 可打开legacy模式，legacy模式下的模块系统可以兼容ie6-8，见rollup配置文件
 
@@ -113,23 +102,6 @@ $ npm test
 $ npm run release
 ```
 
-将新版本发布到npm
-
-```bash
-$ npm publish --access=public
-```
-
-重命名项目名称，首次初始化项目是需要修改名字，或者后面项目要改名时使用，需要修改`rename.js`中的`fromName`和`toName`，会自动重命名下面文件中的名字
-
-- README.md 中的信息
-- package.json 中的信息
-- config/rollup.js 中的信息
-- test/browser/index.html 中的仓库名称
-
-```bash
-$ npm run rename # 重命名命令
-```
-
 ## 贡献者列表
 [contributors](https://github.com/jsmini/base64/graphs/contributors)
 
@@ -140,11 +112,3 @@ $ npm run rename # 重命名命令
 [TODO.md](https://github.com/jsmini/base64/blob/master/TODO.md)
 
 ## 谁在使用
-
-- [type](https://github.com/jsmini/type)
-- [is](https://github.com/jsmini/is)
-- [guid](https://github.com/jsmini/guid)
-- [clone](https://github.com/jsmini/clone)
-- [inherits](https://github.com/jsmini/inherits)
-- [event](https://github.com/jsmini/event)
-- [console](https://github.com/jsmini/console)

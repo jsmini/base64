@@ -172,6 +172,7 @@ function _encode(byteCodes) {
 }
 
 export function decode(text, opt) {
+    text = String(text)
     opt = opt || {}
     var encoding = StdEncoding
     if (opt.useURL) {
