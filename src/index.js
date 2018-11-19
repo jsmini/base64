@@ -1,3 +1,5 @@
+import './polyfills'
+
 const charMap = (() => {
     const mapStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
     let encodingMap = new Map(),
