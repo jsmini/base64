@@ -1,207 +1,93 @@
-import { isString } from '@jsmini/is'
-
-var padChar = '='
-var StdEncoding = getEncodingMap('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/')
-var URLEncoding = getEncodingMap('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_')
-
-function encodeBinary(binary, opt) {
-    opt = opt || {}
-    var encoding = StdEncoding
-    if (opt.useURL) {
-        encoding = URLEncoding
+const charMap = (() => {
+    const mapStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+    let encodingMap = new Map(),
+        decodingMap = new Map()
+    for (let i = 0; i < mapStr.length; i++) {
+        const el = mapStr[i]
+        encodingMap.set(i, el)
+        decodingMap.set(el, i)
     }
-    var arr = []
-    for (var i = 0; i < binary.length; i += 3) {
-        arr.push.apply(arr, arr4to3(binary.slice(i, i + 3)))
-    }
-    arr = arr.map(function(i) {
-        return encoding.encodeMap[i] || padChar
-    })
-    return arr.join('')
-}
+    return { encodingMap, decodingMap }
+})()
 
-function arr4to3(arr) {
-    // 4 * 6 => 3 * 8
-    // 从3到0，因为3可能有变化
-    var ret = []
+export const encode = str => {
+    if (typeof str === 'object' || typeof str === 'function') throw new Error('Invalid argument')
 
-    if (null == arr[2]) {
-        ret[3] = 64
-    } else {
-        ret[3] = arr[2] & 0x3f
-    }
-
-    if (null == arr[1]) {
-        ret[2] = 64
-    } else {
-        ret[2] = ((arr[1] & 0x0f) << 2) | (arr[2] >> 6)
-    }
-
-    ret[1] = ((arr[0] & 0x03) << 4) | (arr[1] >> 4)
-    ret[0] = arr[0] >> 2 // 肯定有 arr[0]
-    return ret
-}
-
-function arr3to4(arr) {
-    // 3 * 8 => 4 * 6
-    var ret = []
-
-    if (null != arr[3]) {
-        ret[2] = ((arr[2] & 0x03) << 6) + arr[3]
-    }
-    if (null != arr[2]) {
-        ret[1] = ((arr[1] & 0x0f) << 4) + ((arr[2] & 0x3c) >> 2)
-    }
-    if (null != arr[1]) {
-        ret[0] = (arr[0] << 2) + ((arr[1] & 0x30) >> 4)
-    }
-
-    return ret
-}
-
-function getEncodingMap(str) {
-    var encodeMap = str2obj(str)
-    var decodeMap = {}
-    for (var key in encodeMap) {
-        decodeMap[encodeMap[key]] = key
-    }
-    return {
-        encodeMap: encodeMap,
-        decodeMap: decodeMap
-    }
-}
-
-function str2obj(str) {
-    var ret = {}
-    for (var i = 0; i < str.length; i++) {
-        ret[i] = str.charAt(i)
-    }
-    return ret
-}
-
-function isURLBase64(text) {
-    return /[-_]/.test(text)
-}
-function toArray(arr) {
-    var ret = []
-    arr.forEach(function(item) {
-        ret.push(item)
-    })
-    return ret
-}
-function _slice(arr, start, end) {
-    // support array and string
-    var ret = [] // default return array
-    var len = arr.length
-    if (len >= 0) {
-        start = start || 0
-        end = end || len
-        // raw array and string use self slice
-        if (typeof arr.slice !== 'function') {
-            arr = toArray(arr)
-        }
-        ret = arr.slice(start, end)
-    }
-    return ret
-}
-function _map(arr, fn) {
-    var ret = []
-    arr.forEach(function(item, i, arr) {
-        ret[i] = fn(item, i, arr)
-    })
-    return ret
-}
-function _decode(str) {
-    // copy from http://stackoverflow.com/questions/12518830/java-string-getbytesutf8-javascript-analog
     str = String(str)
-    var charCode
-    var byteCodes = []
+    let strBin = '',
+        equalFix = ''
+    for (let i = 0; i < str.length; i++) {
+        strBin += str[i]
+            .charCodeAt()
+            .toString(2)
+            .padStart(8, '0')
+    }
+    // 计算末尾余零
+    if (strBin.length % 24 !== 0) {
+        if ((strBin.length % 24) % 16 === 0) {
+            strBin += '00'
+            equalFix = '='
+        } else if ((strBin.length % 24) % 8 === 0) {
+            strBin += '0000'
+            equalFix = '=='
+        } else throw new SyntaxError('Binary parse error')
+    }
 
-    for (var i = 0; i < str.length; i++) {
-        charCode = str.charCodeAt(i)
-        if (charCode < 0x80) {
-            byteCodes.push(charCode)
-        } else if (charCode < 0x800) {
-            byteCodes.push(0xc0 | (charCode >> 6), 0x80 | (charCode & 0x3f))
-        } else if (charCode < 0xd800 || charCode >= 0xe000) {
-            byteCodes.push(
-                0xe0 | (charCode >> 12),
-                0x80 | ((charCode >> 6) & 0x3f),
-                0x80 | (charCode & 0x3f)
-            )
+    return (
+        strBin
+            .split(/(?=^(?:[01]{24})+)/g)
+            .map(el => {
+                const { encodingMap } = charMap
+                return el
+                    .split(/(?=(?:[01]{6})+$)/)
+                    .map(el => encodingMap.get(Number.parseInt(el, 2)))
+                    .join('')
+            })
+            .join('') + equalFix
+    )
+}
+
+export const decode = base64Str => {
+    if (typeof base64Str === 'object' || typeof base64Str === 'function')
+        throw new Error('Invalid argument')
+    base64Str = String(base64Str)
+    const { decodingMap } = charMap
+    let equalNum = 0,
+        strBin = ''
+
+    let b64rLength = base64Str.length
+    // 判断长度
+    if (b64rLength === 0) return ''
+    if (b64rLength % 4 !== 0) throw new SyntaxError('Invalid base64 string')
+    // 匹配末尾等号
+    if (base64Str[b64rLength - 2] === '=') {
+        equalNum = 2
+        base64Str = base64Str.substring(0, b64rLength - 2)
+    } else if (base64Str[b64rLength - 1] === '=') {
+        equalNum = 1
+        base64Str = base64Str.substring(0, b64rLength - 1)
+    }
+
+    // 转二进制串
+    for (let i = 0; i < base64Str.length; i++) {
+        const el = base64Str[i]
+        let prevBin = decodingMap
+            .get(el)
+            .toString(2)
+            .padStart(8, '0')
+            .substring(2)
+        if (i === base64Str.length - 1) {
+            strBin += prevBin.substring(0, 6 - equalNum * 2)
         } else {
-            // let's keep things simple and only handle chars up to U+FFFF...
-            byteCodes.push(0xef, 0xbf, 0xbd) // U+FFFE 'replacement character'
+            strBin += prevBin
         }
     }
 
-    return byteCodes
+    return String.fromCharCode.apply(
+        null,
+        strBin.split(/(?=(?:[01]{8})+$)/g).map(el => Number.parseInt(el, 2))
+    )
 }
 
-function _encode(byteCodes) {
-    // http://www.oschina.net/code/snippet_121125_19984 but it is wrong
-    var arr = []
-    var byteCode = 0
-    var charCode = 0
-
-    for (var i = 0; i < byteCodes.length; i++) {
-        byteCode = byteCodes[i]
-        if (byteCode > 0xe0) {
-            // 224
-            charCode = (byteCode & 0x0f) << 12
-            byteCode = byteCodes[++i]
-            charCode |= (byteCode & 0x3f) << 6
-            byteCode = byteCodes[++i]
-            charCode |= byteCode & 0x3f
-        } else if (byteCode > 0xc0) {
-            // 192
-            charCode = (byteCode & 0x1f) << 6
-            byteCode = byteCodes[++i]
-            charCode |= (byteCode & 0x3f) << 6
-        } else if (byteCode > 0x80) {
-            // 128
-            throw new Error('InvalidCharacterError')
-        } else {
-            // 0-128
-            charCode = byteCode
-        }
-        arr.push(String.fromCharCode(charCode))
-    }
-
-    return arr.join('')
-}
-
-export function decode(text, opt) {
-    text = String(text)
-    opt = opt || {}
-    var encoding = StdEncoding
-    if (opt.useURL) {
-        encoding = URLEncoding
-    } else if (null == opt.useURL && isURLBase64(text)) {
-        encoding = URLEncoding
-    }
-    text = text
-        .replace(/\s+$/, '')
-        .replace(/=+$/, '')
-        .replace(/[\n\r]/g, '') // skip empty line
-    var buf = _map(text.split(''), function(char) {
-        return ~~encoding.decodeMap[char]
-    })
-    // console.log(buf, encoding)
-    var arr = []
-    for (var i = 0; i < buf.length; i += 4) {
-        var bytes = arr3to4(_slice(buf, i, i + 4))
-        arr.push.apply(arr, bytes)
-    }
-    return _encode(arr)
-}
-
-export function encode(binary, opt) {
-    if (isString(binary)) {
-        binary = _decode(binary)
-    }
-    return encodeBinary(binary, opt)
-}
-
-export const btoa = encode
 export const atob = encode
+export const btoa = decode

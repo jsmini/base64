@@ -10,7 +10,11 @@ describe('单元测试', function() {
             expect(base64.encode('123')).to.equal('MTIz')
         })
         it('对象', function() {
-            expect(base64.encode({ test: 'hello' })).to.equal('')
+            try {
+                base64.encode({ test: 'hello' })
+            } catch (e) {
+                expect(e.message).to.equal('Invalid argument')
+            }
         })
         it('字符串', function() {
             expect(base64.encode('hello world')).to.equal('aGVsbG8gd29ybGQ=')
@@ -26,8 +30,8 @@ describe('单元测试', function() {
         it('对象', function() {
             try {
                 base64.decode({ test: 'hello' })
-            } catch(e) {
-                expect(e.message).to.equal('InvalidCharacterError')
+            } catch (e) {
+                expect(e.message).to.equal('Invalid argument')
             }
         })
         it('字符串', function() {
@@ -35,6 +39,13 @@ describe('单元测试', function() {
         })
         it('空', function() {
             expect(base64.decode('')).to.equal('')
+        })
+        it('非法字符串', function() {
+            try {
+                base64.decode('Mq=')
+            } catch (e) {
+                expect(e.message).to.equal('Invalid base64 string')
+            }
         })
     })
 })

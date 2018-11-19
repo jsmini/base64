@@ -9,7 +9,7 @@ Base64生成函数
 
 函数参数和返回值
 
-- param {string} str 传入的字符串。非 string 参数会被当作二进制流解析，这意味着传入普通object将会被解析为空，传入二进制stream会被解析成可用的base64串（例如image base64URL）。
+- param {string} str 传入的字符串，传入object类型参数将会报错。
 - return {string} 生成的bese64码
 
 举个例子
