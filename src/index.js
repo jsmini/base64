@@ -1,5 +1,3 @@
-import './polyfills'
-
 const charMap = (() => {
     const mapStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
     let encodingMap = new Map(),
@@ -12,6 +10,14 @@ const charMap = (() => {
     return { encodingMap, decodingMap }
 })()
 
+const padZeroStart = function(str, tarNum) {
+    let strLen = str.length
+    for (let i = 0; i < tarNum - strLen; i++) {
+        str = '0' + str
+    }
+    return str
+}
+
 export const encode = str => {
     if (typeof str === 'object' || typeof str === 'function') throw new Error('Invalid argument')
 
@@ -19,10 +25,7 @@ export const encode = str => {
     let strBin = '',
         equalFix = ''
     for (let i = 0; i < str.length; i++) {
-        strBin += str[i]
-            .charCodeAt()
-            .toString(2)
-            .padStart(8, '0')
+        strBin += padZeroStart(str[i].charCodeAt().toString(2), 8)
     }
     // 计算末尾余零
     if (strBin.length % 24 !== 0) {
@@ -73,10 +76,7 @@ export const decode = base64Str => {
     // 转二进制串
     for (let i = 0; i < base64Str.length; i++) {
         const el = base64Str[i]
-        let prevBin = decodingMap
-            .get(el)
-            .toString(2)
-            .padStart(8, '0')
+        let prevBin = padZeroStart(decodingMap.get(el).toString(2), 8)
             .substring(2)
         if (i === base64Str.length - 1) {
             strBin += prevBin.substring(0, 6 - equalNum * 2)
