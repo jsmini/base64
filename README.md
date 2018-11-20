@@ -96,6 +96,12 @@ $ npm test
 $ npm run release
 ```
 
+将新版本发布到npm
+
+```bash
+$ npm publish --access=public
+```
+
 ## 贡献者列表
 [contributors](https://github.com/jsmini/base64/graphs/contributors)
 
