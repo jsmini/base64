@@ -1,11 +1,11 @@
 const charMap = (() => {
     const mapStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-    let encodingMap = new Map(),
-        decodingMap = new Map()
+    let encodingMap = {},
+        decodingMap = {}
     for (let i = 0; i < mapStr.length; i++) {
         const el = mapStr[i]
-        encodingMap.set(i, el)
-        decodingMap.set(el, i)
+        encodingMap[i] = el
+        decodingMap[el] = i
     }
     return { encodingMap, decodingMap }
 })()
@@ -45,7 +45,7 @@ export const encode = str => {
                 const { encodingMap } = charMap
                 return el
                     .split(/(?=(?:[01]{6})+$)/)
-                    .map(el => encodingMap.get(Number.parseInt(el, 2)))
+                    .map(el => encodingMap[Number.parseInt(el, 2)])
                     .join('')
             })
             .join('') + equalFix
@@ -76,7 +76,7 @@ export const decode = base64Str => {
     // 转二进制串
     for (let i = 0; i < base64Str.length; i++) {
         const el = base64Str[i]
-        let prevBin = padZeroStart(decodingMap.get(el).toString(2), 8)
+        let prevBin = padZeroStart(decodingMap[el].toString(2), 8)
             .substring(2)
         if (i === base64Str.length - 1) {
             strBin += prevBin.substring(0, 6 - equalNum * 2)
