@@ -1,7 +1,7 @@
 # 文档
 这是一个base64编码解码库
 
-## Base64.encode
+## encode
 
 Base64生成函数
 
@@ -20,9 +20,7 @@ var base64 = require('@jsmini/base64')
 base64.encode('hello world')  // aGVsbG8gd29ybGQ=
 ```
 
-
-
-## Base64.decode
+## decode
 
 Base64解析函数
 
@@ -43,3 +41,8 @@ base64.decode('MTIz')  // 123
 base64.decode('{ test: 'hello' }') // InvalidCharacterError
 ```
 
+## atob
+encode别名，功能同`encode`
+
+## btoa
+decode别名，功能同`decode`

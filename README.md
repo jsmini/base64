@@ -3,17 +3,11 @@
 [![](https://img.shields.io/badge/Powered%20by-jslib%20base64-brightgreen.svg)](https://github.com/yanhaijing/jslib-base64)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/jsmini/base64/blob/master/LICENSE)
 [![Build Status](https://travis-ci.org/jsmini/base64.svg?branch=master)](https://travis-ci.org/jsmini/base64)
-[![npm](https://img.shields.io/badge/npm-0.2.0-orange.svg)](https://www.npmjs.com/package/@jsmini/base64)
+[![npm](https://img.shields.io/badge/npm-0.1.0-orange.svg)](https://www.npmjs.com/package/@jsmini/base64)
 [![NPM downloads](http://img.shields.io/npm/dm/@jsmini/base64.svg?style=flat-square)](http://www.npmtrends.com/@jsmini/base64)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/jsmini/base64.svg)](http://isitmaintained.com/project/jsmini/base64 "Percentage of issues still open")
 
-最好用的js第三方库脚手架，fork或clone本仓库，即可搭建完成一个新库的基础框架
-
-## 特性
-
-- base64编码解码函数
-
-**注意:** 如果不同时使用 export 与 export default 可打开legacy模式，legacy模式下的模块系统可以兼容ie6-8，见rollup配置文件
+base64编码解码函数
 
 ## 兼容性
 单元测试保证支持如下环境：

@@ -1,7 +1,7 @@
 {
   "name": "@jsmini/base64",
-  "version": "0.2.0",
-  "description": "最好用的js第三方库脚手架",
+  "version": "0.1.0",
+  "description": "base64编码解码函数",
   "main": "dist/index.js",
   "jsnext:main": "dist/index.esm.js",
   "module": "dist/index.esm.js",
