@@ -91,5 +91,5 @@ export const decode = base64Str => {
     )
 }
 
-export const atob = encode
-export const btoa = decode
+export const btoa = encode
+export const atob = decode
