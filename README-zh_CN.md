@@ -7,55 +7,52 @@
 [![NPM downloads](http://img.shields.io/npm/dm/@jsmini/base64.svg?style=flat-square)](http://www.npmtrends.com/@jsmini/base64)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/jsmini/base64.svg)](http://isitmaintained.com/project/jsmini/base64 "Percentage of issues still open")
 
-base64 encode/decode function
-
 base64编码解码函数
 
-English | [简体中文](./README-zh_CN.md)
+[English](./README.md) | 简体中文
 
-## Environment Support
+## 兼容性
+单元测试保证支持如下环境：
 
-unit test ensure it supports the following environments.
+| IE   | CH   | FF   | SF   | OP   | IOS  | 安卓   | Node  |
+| ---- | ---- | ---- | ---- | ---- | ---- | ---- | ----- |
+| 6+   | 23+  | 4+   | 6+   | 10+  | 5+   | 2.3+ | 0.10+ |
 
-| IE/Edge | Chrome | Firefox | Safari | Opera | IOS  | Android | Node  |
-| ------- | ------ | ------- | ------ | ----- | ---- | ------- | ----- |
-| 6+      | 23+    | 4+      | 6+     | 10+   | 5+   | 2.3+    | 0.10+ |
+**注意：编译代码依赖ES5环境，对于ie6-8需要引入[es5-shim](http://github.com/es-shims/es5-shim/)才可以兼容，可以查看[demo/demo-global.html](./demo/demo-global.html)中的例子**
 
-**Notice:  builds depends on ES5. In order to support IE6-8,  you should import  [es5-shim](http://github.com/es-shims/es5-shim/) . See example in [demo/demo-global.html](./demo/demo-global.html)**
-
-## Directory
+## 目录介绍
 
 ```
 .
-├── demo
-├── dist  # production code
-├── doc   # document
-├── src   # source code
-├── test  # unit test
-├── CHANGELOG.md
-└── TODO.md
+├── demo 使用demo
+├── dist 编译产出代码
+├── doc 项目文档
+├── src 源代码目录
+├── test 单元测试
+├── CHANGELOG.md 变更日志
+└── TODO.md 计划功能
 ```
 
-## Usage
-npm installation
+## 如何使用
+通过npm下载安装代码
 
 ```bash
 $ npm install --save @jsmini/base64
 ```
 
-Node.js
+如果你是node环境
 
 ```js
 var name = require('@jsmini/base64').name;
 ```
 
-webpack
+如果你是webpack等环境
 
 ```js
 import { name } from '@jsmini/base64';
 ```
 
-Require.js
+如果你是requirejs环境
 
 ```js
 requirejs(['node_modules/@jsmini/base64/dist/index.aio.js'], function (jsmini_base64) {
@@ -63,7 +60,7 @@ requirejs(['node_modules/@jsmini/base64/dist/index.aio.js'], function (jsmini_ba
 })
 ```
 
-Browser
+如果你是浏览器环境
 
 ```html
 <script src="node_modules/@jsmini/base64/dist/index.aio.js"></script>
@@ -73,59 +70,47 @@ Browser
 </script>
 ```
 
-## Document
-
+## 文档
 [API](https://github.com/jsmini/base64/blob/master/doc/api.md)
 
-## Contributing Guide  ![PRs welcome](<https://img.shields.io/badge/PRs-welcome-brightgreen.svg>)
-when initialize, install dependencies 
+## 贡献指南   ![PRs welcome](<https://img.shields.io/badge/PRs-welcome-brightgreen.svg>)
+首次运行需要先安装依赖
 
 ```bash
 $ npm install
 ```
 
-builds your code for production to `build` folder
+一键打包生成生产代码
 
 ```bash
 $ npm run build
 ```
 
-run unit test.  notice: borwser enviroment need to test manually.  test file is in `test/browser`
+运行单元测试，浏览器环境需要手动测试，位于`test/browser`
 
 ```bash
 $ npm test
 ```
 
-change  the  version in package.json and README.md, add your description in CHANGELOG.md, and then release it happily.
+修改package.json中的版本号，修改README.md中的版本号，修改CHANGELOG.md，然后发布新版
 
 ```bash
 $ npm run release
 ```
 
-publish the new package to npm
+将新版本发布到npm
 
 ```bash
 $ npm publish --access=public
 ```
 
-rename  project. you need to edit project name when initialize project or anytime you want to rename the project . you need to rename `formName` and `toname` in file `rename.js`,which will automatically rename project name in the following files
-
-- README.md
-- package.json
-- config/rollup.js
-- test/browser/index.html
-
-```bash
-$ npm run rename # rename command
-```
-
-## Contributors
+## 贡献者列表
 [contributors](https://github.com/jsmini/base64/graphs/contributors)
 
-## CHANGELOG
+## 更新日志
 [CHANGELOG.md](https://github.com/jsmini/base64/blob/master/CHANGELOG.md)
 
-## TODO
+## 计划列表
 [TODO.md](https://github.com/jsmini/base64/blob/master/TODO.md)
 
-## who is using
+## 谁在使用
