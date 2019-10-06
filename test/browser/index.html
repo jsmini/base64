@@ -22,7 +22,7 @@
     <script>
         var libs = {
             'expect.js': expect,
-            '../dist/index.js': jslib_base64
+            '../src/index.js': window['jsmini_base64']
         };
         var require = function(path) {
             return libs[path];

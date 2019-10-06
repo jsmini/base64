@@ -1,6 +1,6 @@
 var expect = require('expect.js')
 
-var base64 = require('../dist/index.js')
+var base64 = require('../src/index.js')
 
 describe('单元测试', function() {
     this.timeout(1000)

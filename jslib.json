@@ -1,0 +1,9 @@
+{
+    "name": "base64",
+    "npmname": "@jsmini/base64",
+    "umdname": "jsmini_base64",
+    "username": "jsmini",
+    "type": "js",
+    "lang": "zh",
+    "version": "1.4.0"
+}

@@ -4,7 +4,9 @@ module.exports = {
         "es6": true,
         "node": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+    ],
     "parserOptions": {
         "sourceType": "module"
     },
@@ -23,8 +25,9 @@ module.exports = {
         ],
         "semi": [
             "error",
-            "never"
+            "always"
         ],
-        "no-console": 0
+        "no-console": "off",
+        "semi": "off",
     }
 };
