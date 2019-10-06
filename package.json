@@ -1,6 +1,6 @@
 {
   "name": "@jsmini/base64",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "base64编码解码函数",
   "main": "dist/index.js",
   "jsnext:main": "dist/index.esm.js",
