@@ -1,6 +1,6 @@
 # [base64](https://github.com/jsmini/base64) 
 
-[![](https://img.shields.io/badge/Powered%20by-jslib%20base64-brightgreen.svg)](https://github.com/yanhaijing/jslib-base64)
+[![](https://img.shields.io/badge/Powered%20by-jslib%20base64-brightgreen.svg)](https://github.com/yanhaijing/jslib-base)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/jsmini/base64/blob/master/LICENSE)
 [![Build Status](https://travis-ci.org/jsmini/base64.svg?branch=master)](https://travis-ci.org/jsmini/base64)
 [![Coveralls](https://img.shields.io/coveralls/jsmini/base64.svg)](https://coveralls.io/github/jsmini/base64)
